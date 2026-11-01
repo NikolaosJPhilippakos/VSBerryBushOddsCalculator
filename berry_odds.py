@@ -120,7 +120,7 @@ def printAllComboOdds() -> None:
 
 def bruteForceOddsOfTraitCount(traitCount: int, cycles: int):
     print(f"Starting search for {traitCount}-trait bushes:")
-    listOfFoundCombos: List[TraitSet] = []
+    listOfFoundCombos: List[tuple] = []
 
     pull: int = 0
     cycle: int = 0
@@ -131,7 +131,7 @@ def bruteForceOddsOfTraitCount(traitCount: int, cycles: int):
     accumulatedVariance: float = 0
     tempDelta:float = 0
 
-    while cycle <= cycles:
+    while cycle < cycles:
         tempTraits = getRandomTraitSet()
         pull += 1
 
@@ -140,21 +140,21 @@ def bruteForceOddsOfTraitCount(traitCount: int, cycles: int):
         if(tempTraits.getTraitCount() != traitCount):
             continue
 
-        if(tempTraits in listOfFoundCombos):
+        if(tempTraits.traits in listOfFoundCombos):
             continue
 
-        listOfFoundCombos.append(tempTraits)
+        listOfFoundCombos.append(tempTraits.traits)
 
         if(len(listOfFoundCombos) == combinationsToFind):
-            listOfFoundCombos = []
-
             # All needed for mean and stdev calculations
             cycle += 1 # == n
             tempDelta = pull - runningMean # delta = tempCount - oldMean
             runningMean += tempDelta / cycle # updates to the new mean
             accumulatedVariance += tempDelta * (pull - runningMean) # adds any leftover delta to variance
 
+
             pull = 0
+            listOfFoundCombos = []
 
     print(f"\nOn average over {cycles} cycles, it took {round(runningMean, 1)} (stdev = {round((accumulatedVariance / (cycle - 1)) ** 0.5, 2)}) findings to discover all {combinationsToFind} {traitCount}-trait berry bushes.\n")
 
@@ -164,8 +164,8 @@ def bruteForceOddsOfTraitCount(traitCount: int, cycles: int):
 def main() -> int:
     bruteForceOddsOfTraitCount(0, SAMPLE_SIZE)
     bruteForceOddsOfTraitCount(1, SAMPLE_SIZE)
-    bruteForceOddsOfTraitCount(2, SAMPLE_SIZE)
-    bruteForceOddsOfTraitCount(3, SAMPLE_SIZE)
+    #bruteForceOddsOfTraitCount(2, SAMPLE_SIZE)
+    #bruteForceOddsOfTraitCount(3, SAMPLE_SIZE)
     bruteForceOddsOfTraitCount(4, SAMPLE_SIZE)
     return 0
    
